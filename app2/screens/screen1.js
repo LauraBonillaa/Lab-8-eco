@@ -5,51 +5,20 @@ export default function renderScreen1() {
   app.innerHTML = `
       <div id="screen1">
         <h2>Lab 2 - Consultas</h2>
-        <button id="btn-users">1. Lista de Usuarios</button>
-        <button id="btn-orders">2. Lista de Órdenes</button>
-        <button id="btn-orders-sorted">3. Órdenes ordenadas por fecha</button>
-        <button id="btn-products-category">4. Productos por categoría</button>
-        <button id="btn-products-multi">5. Productos >30 y Electronics</button>
-        <button id="btn-posts-like">6. Posts con 'tutorial' en título</button>
-        <button id="btn-products-page">7. Primeros 10 productos</button>
-        <button id="btn-products-user">8. Productos del usuario actual</button>
+        <button id="btn-products-category">1. Productos por categoría</button>
+        <button id="btn-products-multi">2. Productos >30 y Electronics</button>
+        <button id="btn-posts-like">3. Posts con 'tutorial' en título</button>
+        <button id="btn-products-page">4. Primeros 10 productos</button>
+        <button id="btn-products-user">5. Productos del usuario actual</button>
         <div id="results"></div>
       </div>
       `;
 
-  document.getElementById("btn-users").addEventListener("click", getUsers);
-  document.getElementById("btn-orders").addEventListener("click", getOrders);
-  document.getElementById("btn-orders-sorted").addEventListener("click", getOrdersSorted);
   document.getElementById("btn-products-category").addEventListener("click", getProductsByCategory);
   document.getElementById("btn-products-multi").addEventListener("click", getProductsMulti);
   document.getElementById("btn-posts-like").addEventListener("click", getPostsLike);
   document.getElementById("btn-products-page").addEventListener("click", getProductsPage);
   document.getElementById("btn-products-user").addEventListener("click", getProductsUser);
-
-  async function getUsers() {
-    const response = await makeRequest("/users", "GET");
-    renderTable(response, ["id", "name"]);
-  }
-
-  async function getOrders() {
-    const response = await makeRequest("/orders", "GET");
-    renderTable(response, ["id", "user_id", "total", "created_at"]);
-  }
-
-  async function getOrdersSorted() {
-    const response = await makeRequest("/orders", "GET");
-    let sorted = [];
-    
-    if (Array.isArray(response)) {
-      sorted = response.sort(function(a, b) {
-        const dateA = new Date(a.created_at);
-        const dateB = new Date(b.created_at);
-        return dateB - dateA;
-      });
-    }
-    
-    renderTable(sorted, ["id", "user_id", "total", "created_at"]);
-  }
 
   async function getProductsByCategory() {
     const response = await makeRequest("/products", "GET");
