@@ -56,19 +56,28 @@ export default function renderScreen1() {
 
   function renderTable(data, columns) {
     const resultsDiv = document.getElementById("results");
+    
     if (!Array.isArray(data) || data.length === 0) {
       resultsDiv.innerHTML = "<p>No hay datos para mostrar.</p>";
       return;
     }
-    let table = `<table><thead><tr>${columns
-      .map((col) => `<th>${col}</th>`)
-      .join("")}</tr></thead><tbody>`;
-    data.forEach((row) => {
-      table += `<tr>${columns
-        .map((col) => `<td>${row[col] !== undefined ? row[col] : ""}</td>`)
-        .join("")}</tr>`;
-    });
-    table += "</tbody></table>";
-    resultsDiv.innerHTML = table;
+
+    let html = "<ul>";
+    
+    for (let i = 0; i < data.length; i++) {
+      const item = data[i];
+      html += "<li>";
+      
+      for (let j = 0; j < columns.length; j++) {
+        const columna = columns[j];
+        const valor = item[columna] !== undefined ? item[columna] : "";
+        html += `<strong>${columna}:</strong> ${valor} `;
+      }
+      
+      html += "</li>";
+    }
+    
+    html += "</ul>";
+    resultsDiv.innerHTML = html;
   }
 }

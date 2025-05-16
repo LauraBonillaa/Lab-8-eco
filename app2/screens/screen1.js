@@ -21,48 +21,27 @@ export default function renderScreen1() {
   document.getElementById("btn-products-user").addEventListener("click", getProductsUser);
 
   async function getProductsByCategory() {
-    const response = await makeRequest("/products", "GET");
+    const productos = await makeRequest("/products", "GET");
     const resultsDiv = document.getElementById("results");
     
-    if (!Array.isArray(response) || response.length === 0) {
+    if (!Array.isArray(productos) || productos.length === 0) {
       resultsDiv.innerHTML = "<p>No hay productos disponibles.</p>";
       return;
     }
 
-    let productsByCategory = {};
+    let html = "<h3>Lista de Productos</h3>";
+    html += "<ul>";
     
-    for (let i = 0; i < response.length; i++) {
-      const product = response[i];
-      const category = product.category;
-      
-      if (!productsByCategory[category]) {
-        productsByCategory[category] = [];
-      }
-      
-      productsByCategory[category].push(product);
-    }
-
-    let html = "<h3>Productos por Categoría</h3>";
-    
-    for (let category in productsByCategory) {
-      html += `<h4>${category}</h4>`;
-      html += "<table>";
-      html += "<thead><tr><th>ID</th><th>Nombre</th><th>Precio</th></tr></thead>";
-      html += "<tbody>";
-      
-      const products = productsByCategory[category];
-      for (let i = 0; i < products.length; i++) {
-        const product = products[i];
-        html += `<tr>
-          <td>${product.id}</td>
-          <td>${product.name}</td>
-          <td>${product.price}</td>
-        </tr>`;
-      }
-      
-      html += "</tbody></table>";
+    for (let i = 0; i < productos.length; i++) {
+      const producto = productos[i];
+      html += `<li>
+        <strong>${producto.name}</strong> - 
+        Categoría: ${producto.category} - 
+        Precio: $${producto.price}
+      </li>`;
     }
     
+    html += "</ul>";
     resultsDiv.innerHTML = html;
   }
 
@@ -135,28 +114,22 @@ export default function renderScreen1() {
       return;
     }
 
-    let table = "<table>";
-    table += "<thead><tr>";
-    for (let i = 0; i < columns.length; i++) {
-      table += `<th>${columns[i]}</th>`;
-    }
-    table += "</tr></thead>";
+    let html = "<ul>";
     
-    table += "<tbody>";
     for (let i = 0; i < data.length; i++) {
-      const row = data[i];
-      table += "<tr>";
+      const item = data[i];
+      html += "<li>";
       
       for (let j = 0; j < columns.length; j++) {
-        const column = columns[j];
-        const value = row[column] !== undefined ? row[column] : "";
-        table += `<td>${value}</td>`;
+        const columna = columns[j];
+        const valor = item[columna] !== undefined ? item[columna] : "";
+        html += `<strong>${columna}:</strong> ${valor} `;
       }
       
-      table += "</tr>";
+      html += "</li>";
     }
-    table += "</tbody></table>";
     
-    resultsDiv.innerHTML = table;
+    html += "</ul>";
+    resultsDiv.innerHTML = html;
   }
 }
